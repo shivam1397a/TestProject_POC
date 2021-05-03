@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.al</groupId>
+    <artifactId>TestProject_POC</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <name>CucumberFramework</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <generated.runner.directory>${project.build.directory}/parallel/runners</generated.runner.directory>
+        <generated.feature.directory>${project.build.directory}/parallel/features</generated.feature.directory>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>6.10.3</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-testng</artifactId>
+            <version>6.10.3</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>6.10.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-jvm</artifactId>
+            <version>1.2.6</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.30</version>
+        </dependency>
+        <dependency>
+            <groupId>io.testproject</groupId>
+            <artifactId>java-sdk</artifactId>
+            <version>1.1.0-RELEASE</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+        <plugin>
+            <groupId>com.trivago.rta</groupId>
+            <artifactId>cucable-plugin</artifactId>
+            <version>1.1.0</version>
+            <executions>
+                <execution>
+                    <id>generate-test-resources</id>
+                    <phase>generate-test-resources</phase>
+                    <goals>
+                        <goal>parallel</goal>
+                    </goals>
+                    <configuration>
+                        <sourceRunnerTemplateFile>${project.basedir}/src/main/java/Runner/CucableRunner.java
+                        </sourceRunnerTemplateFile>
+                        <sourceFeatures>${project.basedir}/src/main/java/resources/features</sourceFeatures>
+                        <generatedFeatureDirectory>${generated.feature.directory}</generatedFeatureDirectory>
+                        <generatedRunnerDirectory>${generated.runner.directory}</generatedRunnerDirectory>
+
+                        <!-- optional: custom data that is available in Cucable placeholders
+                            in a template -->
+                        <!--<customPlaceholders> -->
+                        <!--<comment>This should appear inside the template</comment> -->
+                        <!--</customPlaceholders> -->
+
+                        <!-- optional: include scenarios with certain tags -->
+                        <!--<includeScenarioTags> -->
+                        <!--<param>@scenarioTag1</param> -->
+                        <!--<param>@scenarioTag2</param> -->
+                        <!--</includeScenarioTags> -->
+
+                        <!-- optional: exclude scenarios with certain tags -->
+                        <!--<excludeScenarioTags> -->
+                        <!--<param>@skipme</param> -->
+                        <!--</excludeScenarioTags> -->
+
+                        <!-- optional: number of test runs to create runners and features
+                            multiple times if set to a number greater than 1 -->
+                        <!--<numberOfTestRuns>1</numberOfTestRuns> -->
+
+                        <!-- optional: generate fixed number of runners and distribute all
+                            features round-robin. -->
+                        <!--<desiredNumberOfRunners>2</desiredNumberOfRunners> -->
+
+                        <!-- optional: Cucable log level -->
+                        <!--<logLevel>default</logLevel> -->
+                        <!--<logLevel>compact</logLevel> -->
+                        <!--<logLevel>minimal</logLevel> -->
+                        <!--<logLevel>off</logLevel> -->
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>3.2.0</version>
+            <executions>
+                <execution>
+                    <id>add-test-source</id>
+                    <phase>generate-test-sources</phase>
+                    <goals>
+                        <goal>add-test-source</goal>
+                    </goals>
+                    <configuration>
+                        <sources>
+                            <source>${generated.runner.directory}</source>
+                        </sources>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.18</version>
+
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>3.0.0-M5</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>integration-test</goal>
+                    </goals>
+                    <configuration>
+                        <forkCount>4</forkCount>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        </plugins>
+    </build>
+
+</project>
