@@ -50,25 +50,25 @@ public class WebConnector<V> {
             browser = "chrome";
         }
         switch (browser) {
-//            case "chrome":
-//                System.setProperty("webdriver.chrome.driver", "./drivers/chromedriver.exe");
-//                ChromeOptions chromeOptions = new ChromeOptions();
-//                chromeOptions.addArguments("start-maximized");
-//                driver = new org.openqa.selenium.chrome.ChromeDriver(chromeOptions);
-//                break;
-//            case "firefox":
-//                System.setProperty("webdriver.gecko.driver", "./drivers/geckodriver.exe");
-//                driver = new org.openqa.selenium.firefox.FirefoxDriver();
-//                driver.manage().window().maximize();
-//                break;
             case "chrome":
-                driver = new ChromeDriver("r73l73D4hqOuTwJGP77dkV8hkq7y6WT6450Xuj_84Nc1", new ChromeOptions(), "Cucumber");
-                driver.manage().window().maximize();
+                System.setProperty("webdriver.chrome.driver", "./drivers/chromedriver.exe");
+                ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.addArguments("start-maximized");
+                driver = new org.openqa.selenium.chrome.ChromeDriver(chromeOptions);
                 break;
             case "firefox":
-                driver = new FirefoxDriver("r73l73D4hqOuTwJGP77dkV8hkq7y6WT6450Xuj_84Nc1", new FirefoxOptions(), "Cucumber");
+                System.setProperty("webdriver.gecko.driver", "./drivers/geckodriver.exe");
+                driver = new org.openqa.selenium.firefox.FirefoxDriver();
                 driver.manage().window().maximize();
                 break;
+//            case "chrome":
+//                driver = new ChromeDriver("r73l73D4hqOuTwJGP77dkV8hkq7y6WT6450Xuj_84Nc1", new ChromeOptions(), "Cucumber");
+//                driver.manage().window().maximize();
+//                break;
+//            case "firefox":
+//                driver = new FirefoxDriver("r73l73D4hqOuTwJGP77dkV8hkq7y6WT6450Xuj_84Nc1", new FirefoxOptions(), "Cucumber");
+//                driver.manage().window().maximize();
+//                break;
             default:
                 throw new IllegalArgumentException("Browser \"" + browser + "\" isn't supported.");
         }
