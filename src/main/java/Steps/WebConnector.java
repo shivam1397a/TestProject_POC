@@ -23,46 +23,6 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
-class TestClass1 implements Runnable {
-    public void run() {
-        Hashtable<String, String> capsHashtable = new Hashtable<String, String>();
-        capsHashtable.put("device", "iPhone 12 Pro");
-        capsHashtable.put("real_mobile", "true");
-        capsHashtable.put("os_version", "14");
-        capsHashtable.put("build", "BStack-[Java] Sample Build");
-        capsHashtable.put("name", "Thread 1");
-        WebConnector r1 = new WebConnector();
-        r1.executeTest(capsHashtable);
-    }
-}
-class TestClass2 implements Runnable {
-    public void run() {
-        Hashtable<String, String> capsHashtable = new Hashtable<String, String>();
-        capsHashtable.put("os_version", "10");
-        capsHashtable.put("resolution", "1920x1080");
-        capsHashtable.put("browser", "Chrome");
-        capsHashtable.put("browser_version", "latest");
-        capsHashtable.put("os", "Windows");
-        capsHashtable.put("name", "Thread1"); // test name
-        capsHashtable.put("build", "BStack Build Number 1");
-        WebConnector r1 = new WebConnector();
-        r1.executeTest(capsHashtable);
-    }
-}
-class TestClass3 implements Runnable {
-    public void run() {
-        Hashtable<String, String> capsHashtable = new Hashtable<String, String>();
-        capsHashtable.put("browser", "safari");
-        capsHashtable.put("browser_version", "14");
-        capsHashtable.put("os", "OS X");
-        capsHashtable.put("os_version", "Big Sur");
-        capsHashtable.put("build", "BStack-[Java] Sample Build");
-        capsHashtable.put("name", "Thread 2");
-        WebConnector r1 = new WebConnector();
-        r1.executeTest(capsHashtable);
-    }
-}
-
 public class WebConnector<V> {
 
     public static WebDriver driver = null;
@@ -77,30 +37,6 @@ public class WebConnector<V> {
 //        }
 //    }
 
-    public static final String USERNAME = "bendavis3";
-    public static final String AUTOMATE_KEY = "tqLxHQPqCMpifFwtYHDM";
-    public static final String URL = "https://" + USERNAME + ":" + AUTOMATE_KEY + "@hub-cloud.browserstack.com/wd/hub";
-    public static void main(String[] args) throws Exception {
-        Thread object1 = new Thread(new TestClass1());
-        object1.start();
-        Thread object2 = new Thread(new TestClass2());
-        object2.start();
-        Thread object3 = new Thread(new TestClass3());
-        object3.start();
-    }
-
-    public void executeTest(Hashtable<String, String> capsHashtable) {
-        String key;
-        DesiredCapabilities caps = new DesiredCapabilities();
-        // Iterate over the hashtable and set the capabilities
-        Set<String> keys = capsHashtable.keySet();
-        Iterator<String> itr = keys.iterator();
-        while (itr.hasNext()) {
-            key = itr.next();
-            caps.setCapability(key, capsHashtable.get(key));
-        }
-    }
-
     public WebDriver getDriver() {
         return this.getDriver();
     }
@@ -109,17 +45,28 @@ public class WebConnector<V> {
         this.driver = driver;
     }
 
-    public void setUpDriver(String browser, String reportName) throws Throwable {
+    public void setUpDriver(String browser) throws Throwable {
         if (browser == null) {
             browser = "chrome";
         }
         switch (browser) {
+//            case "chrome":
+//                System.setProperty("webdriver.chrome.driver", "./drivers/chromedriver.exe");
+//                ChromeOptions chromeOptions = new ChromeOptions();
+//                chromeOptions.addArguments("start-maximized");
+//                driver = new org.openqa.selenium.chrome.ChromeDriver(chromeOptions);
+//                break;
+//            case "firefox":
+//                System.setProperty("webdriver.gecko.driver", "./drivers/geckodriver.exe");
+//                driver = new org.openqa.selenium.firefox.FirefoxDriver();
+//                driver.manage().window().maximize();
+//                break;
             case "chrome":
-                driver = new ChromeDriver("r73l73D4hqOuTwJGP77dkV8hkq7y6WT6450Xuj_84Nc1", new ChromeOptions(), "Cucumber", reportName);
+                driver = new ChromeDriver("r73l73D4hqOuTwJGP77dkV8hkq7y6WT6450Xuj_84Nc1", new ChromeOptions(), "Cucumber");
                 driver.manage().window().maximize();
                 break;
             case "firefox":
-                driver = new FirefoxDriver("r73l73D4hqOuTwJGP77dkV8hkq7y6WT6450Xuj_84Nc1", new FirefoxOptions(), "Cucumber", reportName);
+                driver = new FirefoxDriver("r73l73D4hqOuTwJGP77dkV8hkq7y6WT6450Xuj_84Nc1", new FirefoxOptions(), "Cucumber");
                 driver.manage().window().maximize();
                 break;
             default:

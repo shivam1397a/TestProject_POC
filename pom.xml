@@ -12,10 +12,7 @@
     <url>http://maven.apache.org</url>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <generated.runner.directory>${project.build.directory}/parallel/runners</generated.runner.directory>
-        <generated.feature.directory>${project.build.directory}/parallel/features</generated.feature.directory>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
         <dependency>
@@ -30,26 +27,20 @@
         </dependency>
         <dependency>
             <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-jvm</artifactId>
+            <version>3.0.0</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
             <artifactId>cucumber-junit</artifactId>
             <version>6.10.3</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-jvm</artifactId>
-            <version>1.2.6</version>
-            <type>pom</type>
-        </dependency>
-        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>7.4.0</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -66,6 +57,21 @@
             <artifactId>java-sdk</artifactId>
             <version>1.1.0-RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.2.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -80,99 +86,111 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
-
-        <plugin>
-            <groupId>com.trivago.rta</groupId>
-            <artifactId>cucable-plugin</artifactId>
-            <version>1.1.0</version>
-            <executions>
-                <execution>
-                    <id>generate-test-resources</id>
-                    <phase>generate-test-resources</phase>
-                    <goals>
-                        <goal>parallel</goal>
-                    </goals>
-                    <configuration>
-                        <sourceRunnerTemplateFile>${project.basedir}/src/main/java/Runner/CucableRunner.java
-                        </sourceRunnerTemplateFile>
-                        <sourceFeatures>${project.basedir}/src/main/java/resources/features</sourceFeatures>
-                        <generatedFeatureDirectory>${generated.feature.directory}</generatedFeatureDirectory>
-                        <generatedRunnerDirectory>${generated.runner.directory}</generatedRunnerDirectory>
-
-                        <!-- optional: custom data that is available in Cucable placeholders
-                            in a template -->
-                        <!--<customPlaceholders> -->
-                        <!--<comment>This should appear inside the template</comment> -->
-                        <!--</customPlaceholders> -->
-
-                        <!-- optional: include scenarios with certain tags -->
-                        <!--<includeScenarioTags> -->
-                        <!--<param>@scenarioTag1</param> -->
-                        <!--<param>@scenarioTag2</param> -->
-                        <!--</includeScenarioTags> -->
-
-                        <!-- optional: exclude scenarios with certain tags -->
-                        <!--<excludeScenarioTags> -->
-                        <!--<param>@skipme</param> -->
-                        <!--</excludeScenarioTags> -->
-
-                        <!-- optional: number of test runs to create runners and features
-                            multiple times if set to a number greater than 1 -->
-                        <!--<numberOfTestRuns>1</numberOfTestRuns> -->
-
-                        <!-- optional: generate fixed number of runners and distribute all
-                            features round-robin. -->
-                        <!--<desiredNumberOfRunners>2</desiredNumberOfRunners> -->
-
-                        <!-- optional: Cucable log level -->
-                        <!--<logLevel>default</logLevel> -->
-                        <!--<logLevel>compact</logLevel> -->
-                        <!--<logLevel>minimal</logLevel> -->
-                        <!--<logLevel>off</logLevel> -->
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-        <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <version>3.2.0</version>
-            <executions>
-                <execution>
-                    <id>add-test-source</id>
-                    <phase>generate-test-sources</phase>
-                    <goals>
-                        <goal>add-test-source</goal>
-                    </goals>
-                    <configuration>
-                        <sources>
-                            <source>${generated.runner.directory}</source>
-                        </sources>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>2.18</version>
-
-        </plugin>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <version>3.0.0-M5</version>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>integration-test</goal>
-                    </goals>
-                    <configuration>
-                        <forkCount>4</forkCount>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+<!--                    <configuration>-->
+<!--                        <includes>-->
+<!--                            <include>TestRunner.java</include>-->
+<!--                        </includes>-->
+<!--                        <properties>-->
+<!--                            <property>-->
+<!--                                <name>dataproviderthreadcount</name>-->
+<!--                                <value>5</value>-->
+<!--                            </property>-->
+<!--                        </properties>-->
+<!--                    </configuration>-->
+                <configuration>
+                    <forkCount>2</forkCount>
+                    <reuseForks>true</reuseForks>
+                    <includes>
+                        <include>**/Parallel*IT.class</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.temyers</groupId>
+                <artifactId>cucumber-jvm-parallel-plugin</artifactId>
+                <version>5.0.0</version>
+                <executions>
+                    <execution>
+                        <id>generateRunners</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>generateRunners</goal>
+                        </goals>
+                        <configuration>
+                            <glue>
+                                <package>Steps</package>
+                            </glue>
+                            <outputDirectory>${project.build.directory}/generated-test-sources/cucumber</outputDirectory>
+                            <!-- The directory, which must be in the root of the runtime classpath, containing your feature files.  -->
+                            <featuresDirectory>src/main/resources/Steps/</featuresDirectory>
+                            <!-- Directory where the cucumber report files shall be written  -->
+                            <cucumberOutputDir>target/cucumber-parallel</cucumberOutputDir>
+                            <!-- List of cucumber plugins. When none are provided the json formatter is used. For more
+                                 advanced usage see section about configuring cucumber plugins -->
+                            <plugins>
+                                <plugin>
+                                    <name>io.testproject.sdk.internal.reporting.extensions.cucumber.CucumberReporter</name>
+                                    <!--Set to true if this plug creates no output. Setting extension or outputDirectory
+                                        will override this setting -->
+                                    <noOutput>true</noOutput>
+                                </plugin>
+                            </plugins>
+                            <!-- The tags to run, maps to CucumberOptions.tags property. Default is no tags. -->
+                            <tags>
+                                <tag>~@ignored</tag>
+                            </tags>
+                            <!-- Generate TestNG runners instead of JUnit ones. -->
+                            <useTestNG>false</useTestNG>
+                            <!-- The naming scheme to use for the generated test classes.  One of ['simple', 'feature-title', 'pattern'] -->
+                            <namingScheme>simple</namingScheme>
+                            <!-- The class naming pattern to use.  Only required/used if naming scheme is 'pattern'.-->
+                            <namingPattern>Parallel{c}IT</namingPattern>
+                            <!-- One of [SCENARIO, FEATURE]. SCENARIO generates one runner per scenario.  FEATURE generates a runner per feature. -->
+                            <parallelScheme>SCENARIO</parallelScheme>
+                            <!-- Specify a custom template for the generated sources (this is a path relative to the project base directory) -->
+                            <customVmTemplate>src/test/resources/cucumber-custom-runner.vm</customVmTemplate>
+                            <!-- Specify a custom package name for generated sources. Default is no package.-->
+                            <packageName>com.parallel</packageName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Use maven-assembly-plugin plugin with a custom descriptor -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <descriptors>
+                        <!-- Path to the descriptor file -->
+                        <descriptor>src/main/java/assembly/descriptor.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
