@@ -1,0 +1,6 @@
+Appurl: https://altestal.activelylearn.com/account.html#/
+
+HomePage:
+  ddn_grade:
+    type: xpath
+    value: //*[text()='All, Grades']
