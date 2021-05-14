@@ -1,7 +1,7 @@
 Feature: Test
 
   Background:
-    Given I open web browser
+    Given I open web browser on port 8585
       | source | browser |
       | Native | chrome  |
     When I login to AL account
@@ -13,5 +13,5 @@ Feature: Test
     Then I verify catalog filters are working successfully for "<gradelevel>", "<lexilelevel>"
 
     Examples:
-      | gradelevel      | lexilelevel  |
-      | 3rd - 4th grade | 450L - 790L  |
+      | gradelevel      | lexilelevel |
+      | 3rd - 4th grade | 450L - 790L |

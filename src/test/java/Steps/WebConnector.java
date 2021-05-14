@@ -1,7 +1,8 @@
 package Steps;
 
-import io.testproject.sdk.drivers.web.ChromeDriver;
-import io.testproject.sdk.drivers.web.FirefoxDriver;
+import io.testproject.sdk.DriverBuilder;
+import io.testproject.sdk.drivers.ReportType;
+import io.testproject.sdk.drivers.web.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -17,17 +18,17 @@ import org.openqa.selenium.support.ui.Wait;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.Duration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
-public class WebConnector<V> {
+public class WebConnector {
 
     public static WebDriver driver = null;
-    public SessionId session = null;
-    public static Properties prop = new Properties();
+//    public static Properties prop = new Properties();
 
 //    public WebConnector() {
 //        try {
@@ -37,38 +38,38 @@ public class WebConnector<V> {
 //        }
 //    }
 
-    public WebDriver getDriver() {
-        return this.getDriver();
-    }
+//    public WebDriver getDriver() {
+//        return this.getDriver();
+//    }
+//
+//    public void setDriver(WebDriver driver) {
+//        this.driver = driver;
+//    }
 
-    public void setDriver(WebDriver driver) {
-        this.driver = driver;
-    }
-
-    public void setUpDriver(String browser) throws Throwable {
+    public void setUpDriver(String browser,int port,String featureName, String scenarioName) throws Throwable {
         if (browser == null) {
             browser = "chrome";
         }
         switch (browser) {
-            case "chrome":
-                System.setProperty("webdriver.chrome.driver", "./drivers/chromedriver.exe");
-                ChromeOptions chromeOptions = new ChromeOptions();
-                chromeOptions.addArguments("start-maximized");
-                driver = new org.openqa.selenium.chrome.ChromeDriver(chromeOptions);
-                break;
-            case "firefox":
-                System.setProperty("webdriver.gecko.driver", "./drivers/geckodriver.exe");
-                driver = new org.openqa.selenium.firefox.FirefoxDriver();
-                driver.manage().window().maximize();
-                break;
 //            case "chrome":
-//                driver = new ChromeDriver("r73l73D4hqOuTwJGP77dkV8hkq7y6WT6450Xuj_84Nc1", new ChromeOptions(), "Cucumber");
-//                driver.manage().window().maximize();
+//                System.setProperty("webdriver.chrome.driver", "drivers/chromedriver.exe");
+//                ChromeOptions chromeOptions = new ChromeOptions();
+//                chromeOptions.addArguments("start-maximized");
+//                driver = new org.openqa.selenium.chrome.ChromeDriver(chromeOptions);
 //                break;
 //            case "firefox":
-//                driver = new FirefoxDriver("r73l73D4hqOuTwJGP77dkV8hkq7y6WT6450Xuj_84Nc1", new FirefoxOptions(), "Cucumber");
+//                System.setProperty("webdriver.gecko.driver", "drivers/geckodriver.exe");
+//                driver = new org.openqa.selenium.firefox.FirefoxDriver();
 //                driver.manage().window().maximize();
 //                break;
+            case "chrome":
+                driver = new ChromeDriver(new URL("http://localhost:" + port), new ChromeOptions(), featureName, scenarioName);
+                driver.manage().window().maximize();
+                break;
+            case "firefox":
+                driver = new FirefoxDriver(new URL("http://localhost:" + port), new FirefoxOptions(), "Cucumber", scenarioName);
+                driver.manage().window().maximize();
+                break;
             default:
                 throw new IllegalArgumentException("Browser \"" + browser + "\" isn't supported.");
         }
@@ -78,7 +79,7 @@ public class WebConnector<V> {
         ExpectedConditions.jsReturnsValue("return document.readyState==\"complete\";");
     }
 
-    public By getElementWithLocator(String WebElement) throws Exception {
+    public By getElementWithLocator(String WebElement) throws Throwable {
         String locatorTypeAndValue = WebElement;
         String[] locatorTypeAndValueArray = locatorTypeAndValue.split(",");
         String locatorType = locatorTypeAndValueArray[0].trim();
@@ -105,11 +106,11 @@ public class WebConnector<V> {
         }
     }
 
-    public WebElement FindAnElement(String WebElement) throws Exception {
+    public WebElement FindAnElement(String WebElement) throws Throwable {
         return driver.findElement(getElementWithLocator(WebElement));
     }
 
-    public void PerformActionOnElement(String WebElement, String Action, String Text) throws Exception {
+    public void PerformActionOnElement(String WebElement, String Action, String Text) throws Throwable {
         switch (Action) {
             case "Click":
                 FindAnElement(WebElement).click();
@@ -138,7 +139,7 @@ public class WebConnector<V> {
         }
     }
 
-    public void waitForCondition(String TypeOfWait, String WebElement, int Time) {
+    public void waitForCondition(String TypeOfWait, String WebElement, int Time) throws Throwable {
         try {
             Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(Time)).pollingEvery(Duration.ofSeconds(5)).ignoring(Exception.class);
             switch (TypeOfWait) {

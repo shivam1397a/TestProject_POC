@@ -22,30 +22,25 @@
         </dependency>
         <dependency>
             <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-testng</artifactId>
-            <version>6.10.3</version>
-        </dependency>
-        <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-jvm</artifactId>
-            <version>3.0.0</version>
-            <type>pom</type>
-        </dependency>
-        <dependency>
-            <groupId>io.cucumber</groupId>
             <artifactId>cucumber-junit</artifactId>
             <version>6.10.3</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>7.4.0</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>5.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-engine</artifactId>
+            <version>1.8.0-M1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.28</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -55,7 +50,7 @@
         <dependency>
             <groupId>io.testproject</groupId>
             <artifactId>java-sdk</artifactId>
-            <version>1.1.0-RELEASE</version>
+            <version>1.2.0-RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
@@ -66,11 +61,6 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-assembly-plugin</artifactId>
             <version>3.3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-            <version>3.2.0</version>
         </dependency>
     </dependencies>
 
@@ -91,19 +81,23 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M5</version>
+<!--                <configuration>-->
+<!--                    <parallel>methods</parallel>-->
+<!--                    <useUnlimitedThreads>true</useUnlimitedThreads>-->
+<!--                </configuration>-->
 <!--                    <configuration>-->
 <!--                        <includes>-->
-<!--                            <include>TestRunner.java</include>-->
+<!--                            <include>Steps.TestRunner.java</include>-->
 <!--                        </includes>-->
-<!--                        <properties>-->
-<!--                            <property>-->
-<!--                                <name>dataproviderthreadcount</name>-->
-<!--                                <value>5</value>-->
-<!--                            </property>-->
-<!--                        </properties>-->
-<!--                    </configuration>-->
+<!--&lt;!&ndash;                        <properties>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <property>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <name>dataproviderthreadcount</name>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <value>5</value>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </property>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </properties>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </configuration>&ndash;&gt;-->
                 <configuration>
-                    <forkCount>2</forkCount>
+                    <forkCount>10</forkCount>
                     <reuseForks>true</reuseForks>
                     <includes>
                         <include>**/Parallel*IT.class</include>
@@ -125,9 +119,9 @@
                             <glue>
                                 <package>Steps</package>
                             </glue>
-                            <outputDirectory>${project.build.directory}/generated-test-sources/cucumber</outputDirectory>
+                            <outputDirectory>${project.build.directory}/generated-test-sources/cucumber/</outputDirectory>
                             <!-- The directory, which must be in the root of the runtime classpath, containing your feature files.  -->
-                            <featuresDirectory>src/main/resources/Steps/</featuresDirectory>
+                            <featuresDirectory>src/test/java/Features/</featuresDirectory>
                             <!-- Directory where the cucumber report files shall be written  -->
                             <cucumberOutputDir>target/cucumber-parallel</cucumberOutputDir>
                             <!-- List of cucumber plugins. When none are provided the json formatter is used. For more
@@ -155,20 +149,8 @@
                             <!-- Specify a custom template for the generated sources (this is a path relative to the project base directory) -->
                             <customVmTemplate>src/test/resources/cucumber-custom-runner.vm</customVmTemplate>
                             <!-- Specify a custom package name for generated sources. Default is no package.-->
-                            <packageName>com.parallel</packageName>
+                            <packageName>parallelExecution</packageName>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>test-jar</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -180,7 +162,7 @@
                 <configuration>
                     <descriptors>
                         <!-- Path to the descriptor file -->
-                        <descriptor>src/main/java/assembly/descriptor.xml</descriptor>
+                        <descriptor>src/test/java/assembly/descriptor.xml</descriptor>
                     </descriptors>
                 </configuration>
                 <executions>
